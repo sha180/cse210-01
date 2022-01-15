@@ -156,6 +156,7 @@ namespace TicTacToe
             return false;
         }
 
+// search the cordinets of the players tokens to see of they line up verticly
         static bool veritcalSearch2(char[,] pos, int boardSize, int AmountToWin , char player){
 
             int amountInRow = 0;
@@ -177,6 +178,7 @@ namespace TicTacToe
             return false;
         }
 
+// search the cordinets of the players tokens to see of they line up horizontaly
         static bool horzontalSearch2(char[,] pos, int boardSize, int AmountToWin , char player){
 
             int amountInRow = 0;
@@ -198,6 +200,7 @@ namespace TicTacToe
             return false;
         }
 
+// search the cordinets of the players tokens to see of they line from the top corner to the bottem
         static bool desendingSearch2( char[,] pos, int boardSize, int AmountToWin, char player){
             
             int amountInRow = 0;
@@ -225,7 +228,8 @@ namespace TicTacToe
             return false;
         }
 
-        
+
+// search the cordinets of the players tokens to see of they line from the bottem corner to the top
         static bool asindingSearch2(char[,] pos, int boardSize, int AmountToWin, char player){
 
             int amountInRow = 0;
@@ -249,78 +253,78 @@ namespace TicTacToe
             return false;
         }
 
-// search the cordinets of the players tokens to see of they line up verticly
-        static bool veritcalSearch(int[] posY, int[] posX, int boardSize, int AmountToWin){
+// // search the cordinets of the players tokens to see of they line up verticly
+//         static bool veritcalSearch(int[] posY, int[] posX, int boardSize, int AmountToWin){
 
-            int amountInRow = 0;
+//             int amountInRow = 0;
 
-            for (int i = 0; i < boardSize * boardSize - 1; i++){
+//             for (int i = 0; i < boardSize * boardSize - 1; i++){
 
-                if(posX[i] == posX[i+1] && posY[i] + 1 == posY[i+1]){
-                    amountInRow++;
-                    Console.WriteLine("amount in row " + amountInRow);
-                }
-                if (amountInRow == AmountToWin - 1){
-                    amountInRow ++;
-                    return true;
-                }
-            }
+//                 if(posX[i] == posX[i+1] && posY[i] + 1 == posY[i+1]){
+//                     amountInRow++;
+//                     Console.WriteLine("amount in row " + amountInRow);
+//                 }
+//                 if (amountInRow == AmountToWin - 1){
+//                     amountInRow ++;
+//                     return true;
+//                 }
+//             }
 
-            return false;
-        }
-
-
-// search the cordinets of the players tokens to see of they line up horizontaly
-        static bool horzontalSearch(int[] posY, int[] posX, int boardSize, int AmountToWin){
-
-            int amountInRow = 0;
-
-            for (int i = 0; i < boardSize * boardSize - 1; i ++){
-                if(posX[i] + 1 == posX[i+1] && posY[i] == posY[i+1]){
-                    amountInRow ++;
-                }
-                if(amountInRow == AmountToWin - 1){
-                    amountInRow ++;
-                    return true;
-                }
-            }
-            return false;
-        }
+//             return false;
+//         }
 
 
-// search the cordinets of the players tokens to see of they line from the top corner to the bottem
-        static bool desendingSearch(int[] posY, int[] posX, int boardSize, int AmountToWin){
+// // search the cordinets of the players tokens to see of they line up horizontaly
+//         static bool horzontalSearch(int[] posY, int[] posX, int boardSize, int AmountToWin){
+
+//             int amountInRow = 0;
+
+//             for (int i = 0; i < boardSize * boardSize - 1; i ++){
+//                 if(posX[i] + 1 == posX[i+1] && posY[i] == posY[i+1]){
+//                     amountInRow ++;
+//                 }
+//                 if(amountInRow == AmountToWin - 1){
+//                     amountInRow ++;
+//                     return true;
+//                 }
+//             }
+//             return false;
+//         }
+
+
+// // search the cordinets of the players tokens to see of they line from the top corner to the bottem
+//         static bool desendingSearch(int[] posY, int[] posX, int boardSize, int AmountToWin){
             
-            int amountInRow = 0;
+//             int amountInRow = 0;
 
-            for (int i = 0; i < boardSize * boardSize - 1; i++){
-                if (posX[i] + 1 == posX[i+1] && posY[i] + 1 == posY[i+1]){
-                    amountInRow ++;
-                }
-                if (amountInRow == AmountToWin - 1){
-                    amountInRow ++;
-                    return true;
-                }
-            } 
-            return false;
-        }
+//             for (int i = 0; i < boardSize * boardSize - 1; i++){
+//                 if (posX[i] + 1 == posX[i+1] && posY[i] + 1 == posY[i+1]){
+//                     amountInRow ++;
+//                 }
+//                 if (amountInRow == AmountToWin - 1){
+//                     amountInRow ++;
+//                     return true;
+//                 }
+//             } 
+//             return false;
+//         }
 
-// search the cordinets of the players tokens to see of they line from the bottem corner to the top
-        static bool asindingSearch(int[] posY, int[] posX, int boardSize, int AmountToWin){
+// // search the cordinets of the players tokens to see of they line from the bottem corner to the top
+//         static bool asindingSearch(int[] posY, int[] posX, int boardSize, int AmountToWin){
 
-            int amountInRow = 0;
+//             int amountInRow = 0;
 
-            for (int i = 0; i < boardSize * boardSize - 1; i++){
-                if(posX[i] - 1 == posX[i+1] && posY[i] + 1 == posY[i+1]){
-                    amountInRow ++;
-                }
-                if (amountInRow == AmountToWin - 1) {
-                    amountInRow ++;
-                    return true;
-                }
-            }
-            return false;
-        }
+//             for (int i = 0; i < boardSize * boardSize - 1; i++){
+//                 if(posX[i] - 1 == posX[i+1] && posY[i] + 1 == posY[i+1]){
+//                     amountInRow ++;
+//                 }
+//                 if (amountInRow == AmountToWin - 1) {
+//                     amountInRow ++;
+//                     return true;
+//                 }
+//             }
+//             return false;
+//         }
 
         // gets and sets the boardlable numbers
         // and sets the board size;
