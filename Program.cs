@@ -13,43 +13,60 @@ namespace TicTacToe
         static void Main(){
 
             int boardSize = getGameBoardSize();
+
+            int maxNumber = boardSize * boardSize;
             
             string[,] boardLable = new string[boardSize,boardSize];
             char[,] playerBoard = new char[boardSize,boardSize];
 
-            initGame(boardLable, playerBoard, boardSize);
-            gameLoop(boardLable, playerBoard, boardSize);
+            initGame(boardLable, playerBoard, boardSize, maxNumber);
+            gameLoop(boardLable, playerBoard, boardSize, maxNumber);
 
         }
 
-        static void gameLoop(string[,] boardLable, char[,] playerBoard, int boardSize){
+        static void gameLoop(string[,] boardLable, char[,] playerBoard, int boardSize, int maxNumber){
             
-            bool gameGoing = false;
+            bool gameGoing = true;
+
             int playersTurn = 0;
             int chosenLable;
             char player;
-            while(!gameGoing){
 
-                Console.WriteLine($" players turn = {playersTurn}");
+            int spacing = maxNumber.ToString().Length;
+            
+            // main game loop
+            while(gameGoing){
+
                 if (isEven(playersTurn)){
                     player = 'X';
                 }else{
                     player = 'O';
                 }
 
-                chosenLable = editPlayerBoaed(boardLable, playerBoard, boardSize, player);
-                // Console.WriteLine("size = " + boardSize);
+                
+                displayBoard(boardLable, playerBoard, boardSize, spacing);
+
+                // get a players action, modify the playerBoard aray, and save
+                // the action to the chosenLable 
+                chosenLable = editPlayerBoard(boardLable, playerBoard, boardSize, player, maxNumber, spacing);
+
+                // if a valid player action has been detected
                 if (chosenLable >= 1){
+                    // check the board to see the curent player has won
                     gameGoing = checkBoard(chosenLable, playerBoard, boardSize, player, boardSize);
+
+                    // incramint the players turn
                     playersTurn++;
+
+
                 }
-                if(playersTurn == boardSize * boardSize){
-                    displayBoard(boardLable, playerBoard, boardSize);
-                    Console.WriteLine("its a Tie, better luck next time");
-                    break;
-                }
-                if (gameGoing){
-                    displayBoard(boardLable, playerBoard, boardSize);
+
+
+
+                
+                // if the game is over show the end credits
+                if (!gameGoing){
+                    displayBoard(boardLable, playerBoard, boardSize, spacing);
                     Console.Write($"Good game. player ");
                      if (player == 'X'){ 
                         Console.ForegroundColor = ConsoleColor.Blue;
@@ -59,16 +76,34 @@ namespace TicTacToe
                     Console.Write($"{player}");
                     Console.ForegroundColor = ConsoleColor.White;
                     Console.WriteLine(" won! Thanks for playing!");
+
+                    // check if the players want to go again
+                    if (PlayAgain()){
+                        Console.WriteLine();
+                        Main();
+                    }
+                    return;
+                }
+
+                // check if there are any more moves to make
+                if(playersTurn == maxNumber){
+                    displayBoard(boardLable, playerBoard, boardSize, spacing);
+                    Console.WriteLine("its a draw");
+
+                    if (PlayAgain()){
+                        Console.WriteLine();
+                        Main();
+                    }
+                    return;
                 }
                     
             }
         }
 
-        static int editPlayerBoaed(string[,] boardLable, char[,] playerBoard, int boardSize, char player){
+        static int editPlayerBoard(string[,] boardLable, char[,] playerBoard, int boardSize, char player, int maxNumber, int spacing){
             
-            displayBoard(boardLable, playerBoard, boardSize);
 
-            int maxSize = boardSize * boardSize;
+            // int maxSize = boardSize * boardSize;
          
             if (player == 'X'){ 
                 Console.ForegroundColor = ConsoleColor.Blue;
@@ -78,35 +113,45 @@ namespace TicTacToe
             
             Console.Write($"{player}");
             Console.ForegroundColor = ConsoleColor.White;
-            Console.Write($"'s turn to choose a square (1-{maxSize}): ");
+            Console.Write($"'s turn to choose a square (1-{maxNumber}): ");
 
             int chosenLable = getIntFromCMD();
-            if (chosenLable < 0 ){
+
+            // if chosenLable is less than 1 exit function
+            if (chosenLable < 1 ){
                 
                 return -1;
             }
-            if (chosenLable > maxSize){
-                Console.WriteLine(chosenLable + $" is to large enter a number (1-{maxSize})");
+
+            // if the number is to large exit function
+            if (chosenLable > maxNumber){
+                Console.WriteLine(chosenLable + $" is to large enter a number (1-{maxNumber})");
                 return - 1;
             }
+
             int posX = (chosenLable - 1)%boardSize;
 
             int posY = (chosenLable%boardSize == 0 ? chosenLable - 1: chosenLable)/boardSize;
             
+            // check if the space in playerBoard has been taken
             if (playerBoard[posX,posY] != '\0'){
+                // if that space is used
+                // restart the game loop
                 Console.WriteLine("that space is already taken");
                 return -1;
             }else {
+                // store the players marker
                 playerBoard[posX,posY] = player;
             }
+            
             return chosenLable;
 
         }
 
-        // set up the game veriable and 
-        // player chericters
-        static int initGame(string[,] boardLable, char[,] playerBoard, int boardSize){
-            setupBoardLables(boardLable, boardSize);
+// set up the game veriable and 
+// player chericters
+        static int initGame(string[,] boardLable, char[,] playerBoard, int boardSize, int maxNumber){
+            setupBoardLables(boardLable, boardSize, maxNumber);
             
             return 0;
         }
@@ -141,19 +186,20 @@ namespace TicTacToe
             }
             Console.WriteLine();
 
+            // checks the baord in the 4 line directions 
+            // only if more than 1 player move is on the board
             if (loop > 1){
-                
-                if (veritcalSearch2(playerBoard, boardSize, AmountToWin, player)) return true;
-                if (horzontalSearch2(playerBoard, boardSize, AmountToWin, player)) return true;
-                if (desendingSearch2(playerBoard, boardSize, AmountToWin, player)) return true;
-                if (asindingSearch2(playerBoard, boardSize, AmountToWin, player)) return true;
 
-                // if (veritcalSearch(posY, posX, boardSize, AmountToWin)) return true;
-                // if (horzontalSearch(posY, posX, boardSize, AmountToWin)) return true;
-                // if (desendingSearch(posY, posX, boardSize, AmountToWin)) return true;
-                // if (asindingSearch(posY, posX, boardSize, AmountToWin)) return true;
+                // if there is a row that line up this is the end of the game 
+                // and so they return false
+
+                if (veritcalSearch2(playerBoard, boardSize, AmountToWin, player)) return false;
+                if (horzontalSearch2(playerBoard, boardSize, AmountToWin, player)) return false;
+                if (desendingSearch2(playerBoard, boardSize, AmountToWin, player)) return false;
+                if (asindingSearch2(playerBoard, boardSize, AmountToWin, player)) return false;
+
             }
-            return false;
+            return true;
         }
 
 // search the cordinets of the players tokens to see of they line up verticly
@@ -209,15 +255,12 @@ namespace TicTacToe
                 for (int j = 0; j < boardSize;){
                     
 
-                        // Console.WriteLine("diss " + j );
                     if (pos[i,j] == player){
                         if(i == j){
                         amountInRow ++;
-                        // Console.WriteLine("diss " + amountInRow);
                     }}
                     if (amountInRow == AmountToWin){
                         amountInRow ++;
-                        // Console.WriteLine("diss win" + amountInRow);
                         return true;
                     }
                     k++;
@@ -238,11 +281,9 @@ namespace TicTacToe
                 for(int j = 0; j < boardSize; ){
                     if(pos[j,i] == player){
                         amountInRow ++;
-                        Console.WriteLine("ass " + player);
                     }
                     
                     if (amountInRow == AmountToWin) {
-                        Console.WriteLine("ass win" + amountInRow);
                         amountInRow ++;
                         return true;
                     }
@@ -252,7 +293,7 @@ namespace TicTacToe
             }
             return false;
         }
-        
+
         // gets and sets the boardlable numbers
         // and sets the board size;
         static int getGameBoardSize(){
@@ -262,12 +303,12 @@ namespace TicTacToe
             int boardSize = getIntFromCMD();
 
             int loop = 0;
-
-            while(boardSize < 3){
-                Console.WriteLine("Enter a number grater than 3");
+            
+            while(boardSize < 3 || boardSize >= 32){
+                Console.WriteLine("Enter a number grater than 3 but less than 32");
                 loop++;
 
-                if (loop == 4){
+                if (loop == 4 ){
                     Console.WriteLine("failed to get board size. aborting application!");
                     boardSize = -1;
                     break;
@@ -281,8 +322,8 @@ namespace TicTacToe
         }
 
         // gives lables to all the squares on the tic tac toe board
-        static void setupBoardLables(string[,] boardLables, int boardSize){
-            int maxNumber = boardSize * boardSize;
+        static void setupBoardLables(string[,] boardLables, int boardSize, int maxNumber){
+            //int maxNumber = boardSize * boardSize;
 
             int lableSpacing = maxNumber.ToString().Length;
 
@@ -306,11 +347,7 @@ namespace TicTacToe
 
         }
 
-        static void displayBoard(string[,] boardLable, char[,] playerBoard, int boardSize){
-            int maxNumber = boardSize * boardSize;
-
-            int spacing = maxNumber.ToString().Length;
-
+        static void displayBoard(string[,] boardLable, char[,] playerBoard, int boardSize, int spacing){
 
             // print the X's and O's where they should go 
             // leaving nummbers where a player has not 
@@ -360,6 +397,18 @@ namespace TicTacToe
                 }
                 Console.WriteLine();
             }
+        }
+
+        static bool PlayAgain(){
+            Console.Write("would you like to play another round? (y/n):");
+            string input = Console.ReadLine().ToLower();
+            if (input == "y"){
+                return true;
+                
+            }else {
+                return false;
+            }
+
         }
 
         // retreves an intiger from user input
